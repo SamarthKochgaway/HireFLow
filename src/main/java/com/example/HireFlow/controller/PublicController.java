@@ -2,12 +2,14 @@ package com.example.HireFlow.controller;
 
 import com.example.HireFlow.entity.JobApplication;
 import com.example.HireFlow.service.JobApplicationService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/applications")
@@ -19,6 +21,7 @@ public class PublicController {
 @GetMapping
     public ResponseEntity<?> getAllApplications(){
     List<JobApplication> all = jobApplicationService.getAll();
+
     if (all != null && !all.isEmpty()) {
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
@@ -29,5 +32,27 @@ public class PublicController {
     return jobApplicationService.create(application);
 }
 
+@GetMapping("id/{myId}")
+
+    public ResponseEntity<?> getById(@PathVariable ObjectId myId){
+
+    Optional<JobApplication> byId = jobApplicationService.getById(myId);
+
+    if(byId.isPresent()){
+        return new ResponseEntity<>(byId.get(),HttpStatus.OK);
+    }
+    else {
+        return new ResponseEntity<>(byId.get(),HttpStatus.NOT_FOUND);
+    }
+}
+@DeleteMapping("id/{myId}")
+public ResponseEntity<?> deletebyId(@PathVariable ObjectId myId){
+    if(jobApplicationService.deleteById(myId)){
+        return ResponseEntity.noContent().build();
+    }
+    else {
+        return ResponseEntity.notFound().build();
+    }
+}
 
 }

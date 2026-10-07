@@ -3,11 +3,13 @@ package com.example.HireFlow.service;
 import com.example.HireFlow.repository.JobApplicationRepo;
 import com.example.HireFlow.entity.JobApplication;
 import com.example.HireFlow.entity.Status;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JobApplicationService {
@@ -25,4 +27,14 @@ public class JobApplicationService {
     public List<JobApplication> getAll(){
         return jobApplicationRepo.findAll();
     }
+
+    public Optional<JobApplication> getById(ObjectId id){ // "Optional" to prevent NullPointerException and throw exceptions
+        return jobApplicationRepo.findById(id);
+    }
+    public boolean deleteById(ObjectId id){
+        if(!jobApplicationRepo.existsById(id)) {return false ;}
+        jobApplicationRepo.deleteById(id);
+         return true;
+    }
+
 }
