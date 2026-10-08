@@ -1,7 +1,10 @@
 package com.example.HireFlow.controller;
 
+import com.example.HireFlow.dto.ApplicationResponse;
+import com.example.HireFlow.dto.CreateApplicationRequest;
 import com.example.HireFlow.entity.JobApplication;
 import com.example.HireFlow.service.JobApplicationService;
+import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +23,7 @@ public class PublicController {
 
 @GetMapping
     public ResponseEntity<?> getAllApplications(){
-    List<JobApplication> all = jobApplicationService.getAll();
+    List<ApplicationResponse> all = jobApplicationService.getAll();
 
     if (all != null && !all.isEmpty()) {
         return new ResponseEntity<>(all, HttpStatus.OK);
@@ -28,15 +31,15 @@ public class PublicController {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 }
 @PostMapping
-    public JobApplication createNewApplication(@RequestBody JobApplication application){
-    return jobApplicationService.create(application);
+    public ApplicationResponse createNewApplication(@Valid @RequestBody CreateApplicationRequest request){
+    return jobApplicationService.create(request);
 }
 
 @GetMapping("id/{myId}")
 
     public ResponseEntity<?> getById(@PathVariable ObjectId myId){
 
-    Optional<JobApplication> byId = jobApplicationService.getById(myId);
+    Optional<ApplicationResponse> byId = jobApplicationService.getById(myId);
 
     if(byId.isPresent()){
         return new ResponseEntity<>(byId.get(),HttpStatus.OK);

@@ -21,6 +21,9 @@ public class JobApplication {
     private String jobTitle;
     @NonNull
     private String UserName;
+    @NonNull
+    private String jobPostUrl;
+
     private LocalDate applicationDate = LocalDate.now();
     private Status status;
 
