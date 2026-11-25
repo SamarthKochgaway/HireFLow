@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class ApplicationResponse {
@@ -17,4 +18,5 @@ public class ApplicationResponse {
     private String jobPostUrl;
     private LocalDate applicationDate = LocalDate.now();
     private Status status;
+    private LocalDateTime updatedAt;
 }

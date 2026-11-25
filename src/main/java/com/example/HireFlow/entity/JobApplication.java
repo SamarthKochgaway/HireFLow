@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Document(collection = "job_application")
 @Data
@@ -26,6 +27,7 @@ public class JobApplication {
 
     private LocalDate applicationDate = LocalDate.now();
     private Status status;
+    private LocalDateTime updatedAt;
 
 
 }

@@ -2,7 +2,9 @@ package com.example.HireFlow.controller;
 
 import com.example.HireFlow.dto.ApplicationResponse;
 import com.example.HireFlow.dto.CreateApplicationRequest;
+import com.example.HireFlow.dto.UpdateStatusRequest;
 import com.example.HireFlow.entity.JobApplication;
+import com.example.HireFlow.entity.Status;
 import com.example.HireFlow.service.JobApplicationService;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
@@ -49,13 +51,23 @@ public class PublicController {
     }
 }
 @DeleteMapping("id/{myId}")
-public ResponseEntity<?> deletebyId(@PathVariable ObjectId myId){
-    if(jobApplicationService.deleteById(myId)){
+public ResponseEntity<?> deletebyId(@PathVariable ObjectId myId) {
+    if (jobApplicationService.deleteById(myId)) {
         return ResponseEntity.noContent().build();
-    }
-    else {
+    } else {
         return ResponseEntity.notFound().build();
     }
+
 }
+
+@PatchMapping("id/{myId}/status")
+    public ResponseEntity<ApplicationResponse>updateStatus(@PathVariable ObjectId myId,@Valid @RequestBody UpdateStatusRequest request ){
+
+        ApplicationResponse updated = jobApplicationService.updatedStatus(myId, request.getStatus());
+        return ResponseEntity.ok(updated);
+
+
+    }
+
 
 }

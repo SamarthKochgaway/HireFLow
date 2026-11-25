@@ -2,6 +2,8 @@ package com.example.HireFlow.service;
 
 import com.example.HireFlow.dto.ApplicationResponse;
 import com.example.HireFlow.dto.CreateApplicationRequest;
+import com.example.HireFlow.exception.ApplicationNotFound;
+import com.example.HireFlow.exception.InvalidStatusTransition;
 import com.example.HireFlow.repository.JobApplicationRepo;
 import com.example.HireFlow.entity.JobApplication;
 import com.example.HireFlow.entity.Status;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,7 @@ public class JobApplicationService {
         application.setApplicationDate(
                 request.getApplicationDate() != null ? request.getApplicationDate() : LocalDate.now());
         application.setStatus(Status.APPLIED);
+        application.setUpdatedAt(LocalDateTime.now());
         return toResponse(jobApplicationRepo.save(application));
 
     }
@@ -49,6 +53,7 @@ public class JobApplicationService {
         response.setJobPostUrl(application.getJobPostUrl());
         response.setApplicationDate(application.getApplicationDate());
         response.setStatus(application.getStatus());
+        response.setUpdatedAt(application.getUpdatedAt());
         return response;
     }
     public boolean deleteById(ObjectId id){
@@ -57,6 +62,20 @@ public class JobApplicationService {
          return true;
     }
 
+    public ApplicationResponse updatedStatus(ObjectId id, Status newStatus){
 
+     JobApplication application = jobApplicationRepo.findById(id)
+             .orElseThrow(()-> new ApplicationNotFound("Application not found with id"+ id));
+
+     Status current = application.getStatus();
+     if(!current.canMoveto(newStatus)) {
+       throw new InvalidStatusTransition(current, newStatus);
+     }
+     application.setStatus(newStatus);
+     application.setUpdatedAt(LocalDateTime.now());
+
+     return toResponse(jobApplicationRepo.save(application));
+
+    }
 
 }
