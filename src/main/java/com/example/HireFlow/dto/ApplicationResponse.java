@@ -19,4 +19,5 @@ public class ApplicationResponse {
     private LocalDate applicationDate = LocalDate.now();
     private Status status;
     private LocalDateTime updatedAt;
+    private LocalDateTime interviewDate;
 }
